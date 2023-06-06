@@ -21,14 +21,15 @@ public class TcpConsumer {
         String line = new String(bytes);
         this.simpMessagingTemplate.convertAndSend("/topic/temperature", line);
         JsonObject data = JsonParser.parseString(line).getAsJsonObject();
-        if(data.has("TYPE") && Objects.equals(data.get("TYPE").getAsString(), "BME680")) {
+        if(data.has("bme680")) {
+            JsonObject bme680 = data.getAsJsonObject("bme680");
             String[] dataStrings = {
-                    data.get("timestamp").toString(),
-                    data.get("temperature").toString(),
-                    data.get("gas").toString(),
-                    data.get("humidity").toString(),
-                    data.get("pressure").toString(),
-                    data.get("altitude").toString()
+                    bme680.get("timestamp").toString(),
+                    bme680.get("temperature").toString(),
+                    bme680.get("gas").toString(),
+                    bme680.get("humidity").toString(),
+                    bme680.get("pressure").toString(),
+                    bme680.get("altitude").toString()
             };
             System.out.println(Strings.join(Arrays.asList(dataStrings), ','));
         } else {
